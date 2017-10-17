@@ -15,7 +15,7 @@ public class JPEG {
 	HashMap<Integer,List<Integer>> markers;
 	Map<Integer, Character> ASCII;
 	Map<Character, Integer> ASC;
-	
+
 	public JPEG(int[] data) {
 		this.imageData=data;
 		markers=new HashMap<Integer,List<Integer>>();
@@ -24,7 +24,7 @@ public class JPEG {
 		createASCIItable();
 		createASCtable();
 	}
-	
+
 	public void put(int key, int value) {
 		if(markers.containsKey(key)) {
 			markers.get(key).add(value);
@@ -33,11 +33,11 @@ public class JPEG {
 			markers.get(key).add(value);
 		}
 	}
-	
+
 	private HashMap<Integer,List<Integer>> getImageData() { //change to get markers
 		return this.markers;
 	}
-	
+
 	//this is returning the index of each comment location
 	private List<Integer> getComments() {
 		List<Integer> tables = null;
@@ -50,7 +50,7 @@ public class JPEG {
 			return null;
 		}
 	}
-	
+
 	public void readComments() {
 		for(Integer i : getComments()) {
 //			System.out.println(getComments().size());
@@ -65,7 +65,7 @@ public class JPEG {
 			System.out.println();
 		}
 	}
-	
+
 	private void createASCIItable() {
 		Map<Integer, Character> ASCII = new HashMap<Integer, Character>();
 		ASCII.put(32, ' ');ASCII.put(33, '!');ASCII.put(34, '"');
@@ -102,10 +102,10 @@ public class JPEG {
 		ASCII.put(125, '}');ASCII.put(126, '~');
 		this.ASCII=ASCII;
 	}
-	
+
 	private void createASCtable() {
 //		Map<Integer, Character> ASC = new HashMap<Integer, Character>();
-		ASC.put(' ',33);ASC.put('!',33);ASC.put('"',34);
+		ASC.put(' ',32);ASC.put('!',33);ASC.put('"',34);
 		ASC.put('#',35);ASC.put('$',36);ASC.put('%',37);
 		ASC.put('&',38);ASC.put('\'',39);ASC.put('(',40);
 		ASC.put(')',41);ASC.put('*',42);ASC.put('+',43);
@@ -139,7 +139,7 @@ public class JPEG {
 		ASC.put('}',125);ASC.put('~',126);
 //		this.ASC=ASC;
 	}
-	
+
 	public void addComment(String comment) {
 		int size = comment.length() + 2;
 		char comments[] = comment.toCharArray();
@@ -151,9 +151,9 @@ public class JPEG {
 		for(int j=0; j<soiLocation; j++) {
 			newImage[j]=imageData[j];
 		}
-		
+
 		newImage[soiLocation]=0xFE;
-		
+
 		int q = 0;
 		for(int z=soiLocation+1; z<soiLocation+size-1;z++) {
 			newImage[z] = ASC.get(comments[q]);
@@ -162,7 +162,7 @@ public class JPEG {
 		this.imageData=newImage;
 		put(0xFE,soiLocation);
 	}
-	
+
 	public void writeFile(String dir) throws IOException {
 		File newFile = new File(dir);
 		FileOutputStream fos = new FileOutputStream(newFile);
@@ -171,6 +171,6 @@ public class JPEG {
 		}
 		fos.close();
 	}
-	
-	
+
+
 }
